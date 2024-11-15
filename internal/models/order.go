@@ -10,10 +10,10 @@ type Order struct {
 	ID         int         `json:"id"`
 	UserID     int         `json:"user_id"`
 	TotalPrice float64     `json:"total_price" gorm:"column:total_price;type:decimal(10,2)" validate:"required"`
-	Status     string      `json:"status" gorm:"column:status;type:varchar(10)" validate:"required"`
+	Status     string      `json:"status" gorm:"column:status;type:varchar(10)"`
 	CreatedAt  time.Time   `json:"-"`
 	UpdatedAt  time.Time   `json:"-"`
-	OrderItem  []OrderItem `json:"order_items" gorm:"foreignKey:OrderID"`
+	OrderItem  []OrderItem `json:"items"`
 }
 
 func (*Order) TableName() string {
@@ -41,6 +41,15 @@ func (*OrderItem) TableName() string {
 }
 
 func (l OrderItem) Validate() error {
+	v := validator.New()
+	return v.Struct(l)
+}
+
+type OrderStatusRequest struct {
+	Status string `json:"status" validate:"required"`
+}
+
+func (l OrderStatusRequest) Validate() error {
 	v := validator.New()
 	return v.Struct(l)
 }
