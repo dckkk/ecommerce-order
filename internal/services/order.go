@@ -29,6 +29,7 @@ func (s *OrderService) CreateOrder(ctx context.Context, profile external.Profile
 
 	// produce new message
 	kafkaPayload := models.PaymentInitiatePayload{
+		UserID:     profile.Data.ID,
 		OrderID:    req.ID,
 		TotalPrice: req.TotalPrice,
 	}
